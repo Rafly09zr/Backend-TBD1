@@ -23,7 +23,7 @@ app.post("/books", async (req, res) => {
     // Commit the transaction
     await pool.query("COMMIT");
   
-    res.json(newBook.rows[0]);
+    res.json(newBook.rows);
   } catch (err) {
     // Rollback the transaction on error
     await pool.query("ROLLBACK");
@@ -38,7 +38,7 @@ app.post("/books", async (req, res) => {
 app.get("/books", async (req, res) => {
   try {
     const newBook = await pool.query('SELECT * FROM "Book";');
-    res.json(newBook.rows[0]); // Return the queried rows as JSON response
+    res.json(newBook.rows); // Return the queried rows as JSON response
   } catch (err) {
     console.error(err.message);
   }
