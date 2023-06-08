@@ -9,20 +9,6 @@ app.use(express.json());
 
 // Routes
 
-// Create
-// app.post("/books", async (req, res) => {
-//   try {
-//     const { Book_id, Publisher_id, Author_id, Book_name, Publication_year, Book_pages } = req.body;
-//     const besBook = await pool.query(
-//       'INSERT INTO "Book" ("Book_id", "Publisher_id", "Author_id", "Book_name", "Publication_year", "Book_pages") VALUES ($1, $2, $3, $4, $5, $6)',
-//       [Book_id, Publisher_id, Author_id, Book_name, Publication_year, Book_pages]
-//     );
-//     res.json(besBook);
-//   } catch (err) {
-//     console.error(err.message);
-//   }
-// });
-
 //create books 
 app.post("/books", async (req, res) => {
   try {
@@ -31,7 +17,7 @@ app.post("/books", async (req, res) => {
     const { Book_id, Publisher_id, Author_id, Book_name, Publication_year, Book_pages } = req.body;
     const besBook = await pool.query(
       'INSERT INTO "Book" ("Book_id", "Publisher_id", "Author_id", "Book_name", "Publication_year", "Book_pages") VALUES ($1, $2, $3, $4, $5, $6)',
-      [author_name, author_number, year_born, year_died]
+      [Book_id, Publisher_id, Author_id, Book_name, Publication_year, Book_pages]
     );
   
     // Commit the transaction
@@ -45,14 +31,14 @@ app.post("/books", async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
-  });;
+  });
   //insert-end
 
 // Read
 app.get("/books", async (req, res) => {
   try {
-    const besBook = await pool.query('SELECT * FROM "Book";');
-    res.json(besBook.rows); // Return the queried rows as JSON response
+    const newBook = await pool.query('SELECT * FROM "Book";');
+    res.json(newBook.rows[0]); // Return the queried rows as JSON response
   } catch (err) {
     console.error(err.message);
   }
