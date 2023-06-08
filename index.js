@@ -15,7 +15,7 @@ app.post("/books", async (req, res) => {
     // Start a transaction
     await pool.query("BEGIN");
     const { Book_id, Publisher_id, Author_id, Book_name, Publication_year, Book_pages } = req.body;
-    const besBook = await pool.query(
+    const newBook = await pool.query(
       'INSERT INTO "Book" ("Book_id", "Publisher_id", "Author_id", "Book_name", "Publication_year", "Book_pages") VALUES ($1, $2, $3, $4, $5, $6)',
       [Book_id, Publisher_id, Author_id, Book_name, Publication_year, Book_pages]
     );
@@ -23,7 +23,7 @@ app.post("/books", async (req, res) => {
     // Commit the transaction
     await pool.query("COMMIT");
   
-    res.json(besBook.rows[0]);
+    res.json(newBook.rows[0]);
   } catch (err) {
     // Rollback the transaction on error
     await pool.query("ROLLBACK");
