@@ -12,40 +12,41 @@ app.use(express.json());
 // Create
 
 //create books 
-// app.post("/books", async (req, res) => {
-//   try {
-//     // Start a transaction
-//     await pool.query("BEGIN");
-//     const { Book_id, Publisher_id, Author_id, Book_name, Publication_year, Book_pages } = req.body;
-//     const newBook = await pool.query(
-//       'INSERT INTO "Book" ("Book_id", "Publisher_id", "Author_id", "Book_name", "Publication_year", "Book_pages") VALUES ($1, $2, $3, $4, $5, $6)',
-//       [Book_id, Publisher_id, Author_id, Book_name, Publication_year, Book_pages]
-//     );
-  
-//     // Commit the transaction
-//     await pool.query("COMMIT");
-  
-//     res.json(newBook.rows);
-//   } catch (err) {
-//     // Rollback the transaction on error
-//     await pool.query("ROLLBACK");
-  
-//     console.error(err.message);
-//     res.status(500).send("Server Error");
-//   }
-//   });
 app.post("/books", async (req, res) => {
   try {
+    // Start a transaction
+    await pool.query("BEGIN");
     const { Book_id, Publisher_id, Author_id, Book_name, Publication_year, Book_pages } = req.body;
     const newBook = await pool.query(
       'INSERT INTO "Book" ("Book_id", "Publisher_id", "Author_id", "Book_name", "Publication_year", "Book_pages") VALUES ($1, $2, $3, $4, $5, $6)',
       [Book_id, Publisher_id, Author_id, Book_name, Publication_year, Book_pages]
     );
-    res.json(newBook);
+  
+    // Commit the transaction
+    await pool.query("COMMIT");
+  
+    res.json(newBook.rows);
   } catch (err) {
+    // Rollback the transaction on error
+    await pool.query("ROLLBACK");
+  
     console.error(err.message);
+    res.status(500).send("Server Error");
   }
-});
+  });
+
+// app.post("/books", async (req, res) => {
+//   try {
+//     const { Book_id, Publisher_id, Author_id, Book_name, Publication_year, Book_pages } = req.body;
+//     const newBook = await pool.query(
+//       'INSERT INTO "Book" ("Book_id", "Publisher_id", "Author_id", "Book_name", "Publication_year", "Book_pages") VALUES ($1, $2, $3, $4, $5, $6)  RETURNING *',
+//       [Book_id, Publisher_id, Author_id, Book_name, Publication_year, Book_pages]
+//     );
+//     res.json(newBook.rows[0]);
+//   } catch (err) {
+//     console.error(err.message);
+//   }
+// });
   //insert-end
 
 // Read
